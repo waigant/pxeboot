@@ -1,0 +1,33 @@
+default vesamenu.c32
+prompt 0
+timeout 0
+
+label local
+  menu label Boot from ^local drive
+  localboot 0xffff
+
+label f33-kickstart
+  menu label ^Install Fedora 33 ( Kickstart )
+  kernel http://truenas/pxeboot/f33/vmlinuz
+  append ip=dhcp noipv6 ipv6.disable=1 initrd=http://truenas/pxeboot/f33/initrd.img inst.stage2=https://download.fedoraproject.org/pub/fedora/linux/releases/33/Server/x86_64/os/ inst.ks=http://truenas/pxeboot/f33/kickstart.cfg
+
+label f33-graphical
+  menu label ^Install Fedora 33 ( Graphical )
+  kernel http://truenas/pxeboot/f33/vmlinuz
+  append ip=dhcp noipv6 ipv6.disable=1 initrd=http://truenas/pxeboot/f33/initrd.img inst.stage2=https://download.fedoraproject.org/pub/fedora/linux/releases/33/Server/x86_64/os/ inst.ks=http://truenas/pxeboot/f33/kickstart-graphical.cfg
+  
+label centos8-kickstart
+  menu label ^Install CentOS Stream 8 ( Kickstart )
+  kernel http://truenas/pxeboot/centos8/vmlinuz
+  append ip=dhcp noipv6 ipv6.disable=1 initrd=http://truenas/pxeboot/centos8/initrd.img inst.stage2=http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/ ks=http://truenas/pxeboot/centos8/kickstart.cfg
+
+label centos8-graphical
+  menu label ^Install CentOS Stream 8 ( Graphical )
+  kernel http://truenas/pxeboot/centos8/vmlinuz
+  append ip=dhcp noipv6 ipv6.disable=1 initrd=http://truenas/pxeboot/centos8/initrd.img inst.stage2=http://mirror.centos.org/centos/8-stream/BaseOS/x86_64/os/ ks=http://truenas/pxeboot/centos8/kickstart-graphical.cfg
+
+label fcos-stable
+  menu label ^Start Fedora Core OS Stable
+  kernel fcos/fedora-coreos-33.20201201.3.0-live-kernel-x86_64
+  append ip=dhcp noipv6 ipv6.disable=1 initrd=http://truenas/pxeboot/fcos/fedora-coreos-33.20201201.3.0-live-initramfs.x86_64.img,http://truenas/pxeboot/fcos/fedora-coreos-33.20201201.3.0-live-rootfs.x86_64.img coreos.inst.install_dev=/dev/sda coreos.inst.ignition_url=http://truenas/pxeboot/fcos/fcos.ign
+iappend 2

@@ -1,0 +1,5 @@
+vmlinuz
+initrd.img
+*.img
+*kernel-x86_64
+*.sig

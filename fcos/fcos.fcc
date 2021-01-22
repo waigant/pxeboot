@@ -1,0 +1,32 @@
+variant: fcos
+version: 1.2.0
+passwd:
+  users:
+  - name: core
+    password_hash: "$6$rounds=4096$oL4tqo0lO$e9zKZCVWN9Q6tqTaDhB.Cyd4R3OuqV4ytnPXB4J18uZXYb.KM1dQnG/saDrVykCZxlg3LishaeHCs3wJjh1gj1"
+storage:
+  files:
+    - path: /etc/ssh/sshd_config.d/20-enable-passwords.conf
+      mode: 0644
+      contents:
+        inline: |
+          # Fedora CoreOS disables SSH password login by default.
+          # Enable it.
+          # This file must sort before 40-disable-passwords.conf.
+          PasswordAuthentication yes
+systemd:
+  units:
+    - name: postinstall.service
+      enabled: true
+      contents: |
+        [Unit]
+        Description=Post Installation
+        After=network-online.target
+        Wants=network-online.target
+
+        [Service]
+        TimeoutStartSec=0
+        ExecStart=/bin/bash -c "/bin/rpm-ostree install open-vm-tools && reboot || /bin/true"
+
+        [Install]
+        WantedBy=multi-user.target

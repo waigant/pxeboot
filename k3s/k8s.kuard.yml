@@ -1,0 +1,62 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: kuard
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: kuard
+  namespace: kuard
+spec:
+  selector:
+    matchLabels:
+      app: kuard
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kuard
+    spec:
+      containers:
+      - image: gcr.io/kuar-demo/kuard-amd64:1
+        imagePullPolicy: Always
+        name: kuard
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kuard
+  namespace: kuard
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
+  selector:
+    app: kuard
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kuard
+  namespace: kuard
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - "kuard.k3s.dus.waigant.io"
+    secretName: kuard-tls
+  rules:
+  - host: kuard.k3s.dus.waigant.io
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kuard
+          servicePort: 80

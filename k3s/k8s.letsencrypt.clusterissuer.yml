@@ -1,0 +1,81 @@
+# ---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: dus.waigant.io.cloudflare.api.token
+#   namespace: cert-manager
+# type: Opaque
+# stringData:
+#   api-token: xxx
+# ---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: dus.waigant.io.cloudflare.api.key
+#   namespace: cert-manager
+# type: Opaque
+# stringData:
+#   api-key: xxx
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-staging
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-staging-v02.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: sergei@waigant.com
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-staging
+    # Enable the HTTP-01 challenge provider
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+    # An empty 'selector' means that this solver matches all domains
+    # - dns01:
+    #     cloudflare:
+    #       email: sergei@waigant.com
+    #       apiKeySecretRef:
+    #         name: dus.waigant.io.cloudflare.api.key
+    #         key: api-key
+          # apiTokenSecretRef:
+          #   name: dus.waigant.io.cloudflare.api.token
+          #   key: api-token
+
+    # We only use cloudflare to solve challenges for example.org.
+    # Alternative options such as 'matchLabels' and 'dnsZones' can be specified
+    # as part of a solver's selector too.
+    # - selector:
+    #     dnsNames:
+    #     - example.org
+    #   dns01:
+    #     cloudflare:
+    #       email: my-cloudflare-acc@example.com
+    #       # !! Remember to create a k8s secret before
+    #       # kubectl create secret generic cloudflare-api-key-secret
+    #       apiKeySecretRef:
+    #         name: cloudflare-api-key-secret
+    #         key: api-key
+---
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+    # The ACME server URL
+    server: https://acme-v02.api.letsencrypt.org/directory
+    # Email address used for ACME registration
+    email: sergei@waigant.com
+    # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    # Enable the HTTP-01 challenge provider
+    solvers:
+    - http01:
+        ingress:
+          class: nginx

@@ -1,0 +1,21 @@
+ssh_authorized_keys:
+- github:sergeiwaigant
+
+boot_cmd: []
+init_cmd: []
+run_cmd: []
+
+k3os:
+  data_sources:
+  - aws
+  environment: {}
+  # k3s_args:
+  # - "server"
+  # - "--cluster-domain=k3s.dus.waigant.io"
+  # - "--tls-san *.k3s.dus.waigant.io"
+
+  ntp_servers:
+  - 0.de.pool.ntp.org
+  - 1.de.pool.ntp.org
+  - 2.de.pool.ntp.org
+  - 3.de.pool.ntp.org
